@@ -1,0 +1,16 @@
+.cancel-icon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 30px; /* Adjust as needed */
+    height: 30px; /* Adjust as needed */
+    border-radius: 50%;
+    background-color: #ff0000; /* Change color as desired */
+    color: #ffffff; /* Change color as desired */
+    cursor: pointer; /* For mouse interaction */
+  }
+  
+  .cancel-icon span {
+    font-size: 18px; /* Adjust size as needed */
+    margin: auto; /* Center the 'X' */
+  }

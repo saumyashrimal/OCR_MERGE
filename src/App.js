@@ -1,14 +1,19 @@
+import { useState } from 'react';
 import './App.css';
 import FileUpload from './Components/FileUpload';
-import DisplayInfo from './Components/DisplayInfo';
+import TopNavigationHeader from './Components/Navigation';
+import ListOfIds from './Components/ListOfIds';
 
 function App() {
+  const [showList, setShowList] = useState(false);
   return (
+    <>
+      <TopNavigationHeader setShowList={setShowList} />
     <div className="App">
-      <FileUpload />
-      <hr />
-      <DisplayInfo />
+      {!showList && <FileUpload />}
+      {showList && <ListOfIds />}
     </div>
+    </>
   );
 }
 
