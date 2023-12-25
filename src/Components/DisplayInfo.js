@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Modal, Button, Typography, Grid } from "@material-ui/core";
+import { Modal, Typography, Grid, Button } from "@material-ui/core";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { Edit, Label } from "@material-ui/icons";
+import { Edit } from "@material-ui/icons";
 import "./DisplayStyles.css";
-import Avatar from "@mui/material/Avatar";
 import CustomTextField from "./CustomTextField";
 
 // Modal styles
@@ -47,12 +46,20 @@ const useStyles = makeStyles((theme) => ({
   containerItem: {
     marginLeft: "8px",
   },
+  editButton: {
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
+    marginTop: "5px",
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.dark,
+    },
+  },
 }));
 
 const DisplayInfo = (props) => {
   const classes = useStyles();
   const [editMode, setEditMode] = useState(false);
-  const {showModal, setShowModal} = props;
+  const { showModal, setShowModal } = props;
   const {
     identification_number,
     name,
@@ -71,9 +78,11 @@ const DisplayInfo = (props) => {
     data_of_expiry: "",
   };
   const [errors, setErrors] = useState(err);
-  const handleEditField = (e) => {
 
-  };
+  const handleEditSubmit = () => {}
+
+  const handleEditField = (e) => {};
+
   const objArr1 = [
     {
       label: "IDENTIFICATION NUMBER",
@@ -95,30 +104,32 @@ const DisplayInfo = (props) => {
       onchange: handleEditField,
       error: errors[last_name],
       editMode,
-    }
+    },
   ];
 
-  const objArr2 = [{
-    label: "DATE OF BIRTH",
-    value: date_of_birth,
-    onchange: handleEditField,
-    error: errors[date_of_birth],
-    editMode,
-  },
-  {
-    label: "DATE OF ISSUE",
-    value: date_of_issue,
-    onchange: handleEditField,
-    error: errors[date_of_issue],
-    editMode,
-  },
-  {
-    label: "DATE OF EXPIRY",
-    value: date_of_birth,
-    onchange: handleEditField,
-    error: errors[date_of_expiry],
-    editMode,
-  }];
+  const objArr2 = [
+    {
+      label: "DATE OF BIRTH",
+      value: date_of_birth,
+      onchange: handleEditField,
+      error: errors[date_of_birth],
+      editMode,
+    },
+    {
+      label: "DATE OF ISSUE",
+      value: date_of_issue,
+      onchange: handleEditField,
+      error: errors[date_of_issue],
+      editMode,
+    },
+    {
+      label: "DATE OF EXPIRY",
+      value: date_of_birth,
+      onchange: handleEditField,
+      error: errors[date_of_expiry],
+      editMode,
+    },
+  ];
 
   const handleClose = () => {
     setShowModal(false);
@@ -181,6 +192,15 @@ const DisplayInfo = (props) => {
               </Grid>
             </Grid>
           </Grid>
+          {editMode && (
+            <Button
+              variant="contained"
+              className={classes.editButton}
+              onClick={handleEditSubmit}
+            >
+              Submit
+            </Button>
+          )}
         </div>
       </Modal>
     </div>

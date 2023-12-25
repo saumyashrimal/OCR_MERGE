@@ -5,7 +5,7 @@ import DisplayInfo from "./DisplayInfo";
 function FileUpload() {
   const [file, setFile] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [idDetails, setIdDetails] = useState({});
+  const [idDetails, setIdDetails] = useState(null);
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile.size <= 2 * 1024 * 1024) {
@@ -25,11 +25,6 @@ function FileUpload() {
         method: "POST",
         body: formData,
       }).then((res) => res.json());
-      const OCR = await fetch("http://localhost:8080/OCR/addOCR", {
-        method: "POST",
-        body: JSON.stringify(response?.response)
-      })
-      if(OCR)
       // Handle the response as needed
       console.log("File uploaded successfully", response);
       setIdDetails(response?.response);
@@ -38,6 +33,24 @@ function FileUpload() {
       console.error("Error uploading file", error);
     }
   };
+
+  const handleAddOCR = async (idDetails) => {
+    if(idDetails){
+        await fetch("http://localhost:8080/OCR/addOCR", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+              },
+            body: JSON.stringify(idDetails)
+          })
+    }
+  }
+
+  useEffect(() => {
+    if(idDetails){
+        handleAddOCR(idDetails);
+    }
+  }, [idDetails])
 
   useEffect(() => {
     if (file) {

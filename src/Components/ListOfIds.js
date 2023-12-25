@@ -1,71 +1,86 @@
-import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+} from "@mui/material";
+import DisplayInfo from "./DisplayInfo";
 
 const ListOfIds = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [data, setData] = useState([
-    // Replace this with your data (an array of objects with properties for each column)
-    { id: 1, column1: 'Value1', column2: 'Value2', column3: 'Value3', column4: 'Value4', column5: 'Value5', column6: 'Value6', column7: 'Value7' },
-    // Add more data as needed
-  ]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [data, setData] = useState([]);
+  const [details, setDetails] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const getDetails = async () => {
+    let resp = await fetch("http://localhost:8080/OCR/getOCRDetails").then((resp) => resp.json());
+    console.log("resp = ", resp);
+    setData(resp?.response);
+  };
   useEffect(() => {
-    // fetch details
-  }, [])
+    getDetails();
+  }, []);
 
   // Function to filter data based on search term
-  const filteredData = data.filter(item =>
-    Object.values(item).some(value =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-  const handleOpen = (identification_number) => {
+  const handleOpen = (details) => {
+    setShowModal(true);
+    setDetails(details);
+  };
 
-  }
 
   return (
-    <div>
-      {/* Search bar */}
-      <TextField
-        label="Search by identification_number, name, last name...."
-        variant="outlined"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{margin: 20, width: "80%" }}
-      />
-      
-      {/* Table */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>IDENTIFICATION NUMBER</TableCell>
-              <TableCell>NAME</TableCell>
-              <TableCell>LAST NAME</TableCell>
-              <TableCell>DATE OF BIRTH</TableCell>
-              <TableCell>DATE OF ISSUE</TableCell>
-              <TableCell>DATE OF EXPIRY</TableCell>
-              <TableCell>ACTIONS</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.column1}</TableCell>
-                <TableCell>{row.column2}</TableCell>
-                <TableCell>{row.column3}</TableCell>
-                <TableCell>{row.column4}</TableCell>
-                <TableCell>{row.column5}</TableCell>
-                <TableCell>{row.column6}</TableCell>
-                <TableCell>
-                    <button onClick={(e) => handleOpen(row.identification_number) }>OPEN</button>
-                    <button onClick={(e) => handleOpen(row.identification_number) }>Edit</button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+    <>
+      {data.length && (
+        <div>
+          {/* Search bar */}
+          <TextField
+            label="Search by identification_number, name, last name...."
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ margin: 20, width: "80%" }}
+          />
+
+          {/* Table */}
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>IDENTIFICATION NUMBER</TableCell>
+                  <TableCell>NAME</TableCell>
+                  <TableCell>LAST NAME</TableCell>
+                  <TableCell>DATE OF BIRTH</TableCell>
+                  <TableCell>DATE OF ISSUE</TableCell>
+                  <TableCell>DATE OF EXPIRY</TableCell>
+                  <TableCell>ACTIONS</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row._id}>
+                    <TableCell>{row.identification_number}</TableCell>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.last_name}</TableCell>
+                    <TableCell>{row.date_of_birth}</TableCell>
+                    <TableCell>{row.date_of_issue}</TableCell>
+                    <TableCell>{row.date_of_expiry}</TableCell>
+                    <TableCell>
+                      <button onClick={(e) => handleOpen(row)}>OPEN</button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {showModal && <DisplayInfo idDetails={details} showModal={showModal} setShowModal={setShowModal} />}
+        </div>
+      )}
+    </>
   );
 };
 
