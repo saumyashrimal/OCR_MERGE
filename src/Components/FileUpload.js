@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LargeFileInput from "./Dropzone";
 import DisplayInfo from "./DisplayInfo";
+import axiosInstance from "../helper";
 
 function FileUpload() {
   const [file, setFile] = useState(null);
@@ -21,7 +22,7 @@ function FileUpload() {
     formData.append("image", file, file.name);
     try {
       // Make a POST request to your backend API endpoint to store the file
-      const response = await fetch("http://localhost:8080/files/upload", {
+      const response = await axiosInstance("/files/upload", {
         method: "POST",
         body: formData,
       }).then((res) => res.json());
@@ -36,7 +37,7 @@ function FileUpload() {
 
   const handleAddOCR = async (idDetails) => {
     if(idDetails){
-        await fetch("http://localhost:8080/OCR/addOCR", {
+        await axiosInstance("/OCR/addOCR", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

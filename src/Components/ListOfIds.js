@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axiosInstance from "../helper";
 import {
   Table,
   TableBody,
@@ -17,7 +18,7 @@ const ListOfIds = () => {
   const [details, setDetails] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const getDetails = async () => {
-    let resp = await fetch("http://localhost:8080/OCR/getOCRDetails").then((resp) => resp.json());
+    let resp = await axiosInstance("http://localhost:8080/OCR/getOCRDetails").then((resp) => resp.json());
     console.log("resp = ", resp);
     setData(resp?.response);
   };
